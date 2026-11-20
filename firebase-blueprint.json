@@ -1,0 +1,800 @@
+{
+  "entities": {
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Trusted Main Admin allowlist entry verified by UID.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": ["uid", "email", "fullName", "createdAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user account record with role and approval status.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin", "staff"],
+          "maxLength": 16
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "approved", "rejected", "suspended"],
+          "maxLength": 24
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "fullName", "email", "role", "status", "createdAt", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Catalog product visible to Admin and active items visible to Staff.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64,
+          "pattern": "^[A-Z0-9_\\-]+$"
+        },
+        "productName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 160
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "sellingPrice": {
+          "type": "number"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "imageUrl": {
+          "type": "string",
+          "maxLength": 200000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "productCode",
+        "productName",
+        "category",
+        "description",
+        "sellingPrice",
+        "isActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ProductCost": {
+      "title": "ProductCost",
+      "description": "Admin-only internal unit cost per product, isolated from Staff reads.",
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productCost": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": ["productId", "productCost", "updatedAt"]
+    },
+    "StockVariant": {
+      "title": "StockVariant",
+      "description": "Per-variant inventory count enforcing Total = Available + Reserved.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64
+        },
+        "productName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "size": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "colour": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "sizeNorm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "colourNorm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "availableQty": {
+          "type": "integer"
+        },
+        "reservedQty": {
+          "type": "integer"
+        },
+        "totalQty": {
+          "type": "integer"
+        },
+        "lowStockThreshold": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Available", "Low Stock", "Not Available"],
+          "maxLength": 24
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "productId",
+        "productCode",
+        "productName",
+        "size",
+        "colour",
+        "sizeNorm",
+        "colourNorm",
+        "availableQty",
+        "reservedQty",
+        "totalQty",
+        "lowStockThreshold",
+        "status",
+        "updatedAt"
+      ]
+    },
+    "StockMovement": {
+      "title": "StockMovement",
+      "description": "Immutable stock movement audit ledger entry.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "variantId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "productCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64
+        },
+        "productName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "size": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "colour": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "actionType": {
+          "type": "string",
+          "enum": ["Initial", "Add", "Reduce", "Reserve", "Release", "Complete"],
+          "maxLength": 24
+        },
+        "movementType": {
+          "type": "string",
+          "enum": ["initial", "add", "reduce", "reserve", "release", "complete"],
+          "maxLength": 24
+        },
+        "quantityDelta": {
+          "type": "integer"
+        },
+        "previousAvailable": {
+          "type": "integer"
+        },
+        "newAvailable": {
+          "type": "integer"
+        },
+        "previousTotal": {
+          "type": "integer"
+        },
+        "newTotal": {
+          "type": "integer"
+        },
+        "previousReserved": {
+          "type": "integer"
+        },
+        "newReserved": {
+          "type": "integer"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "actorId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "actorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "clientRequestId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "variantId",
+        "productId",
+        "productCode",
+        "productName",
+        "size",
+        "colour",
+        "actionType",
+        "movementType",
+        "quantityDelta",
+        "previousAvailable",
+        "newAvailable",
+        "previousTotal",
+        "newTotal",
+        "previousReserved",
+        "newReserved",
+        "note",
+        "actorId",
+        "actorName",
+        "createdAt"
+      ]
+    },
+    "StockIdempotency": {
+      "title": "StockIdempotency",
+      "description": "Transaction idempotency lock preventing duplicate stock adjustments.",
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "variantId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "actorId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": ["requestId", "variantId", "actorId", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Client order lifecycle record with stock reservation tracking.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "orderId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 64
+        },
+        "staffId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "staffName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "customerName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 160
+        },
+        "contactNumber": {
+          "type": "string",
+          "minLength": 6,
+          "maxLength": 40
+        },
+        "deliveryAddress": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 500
+        },
+        "productId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "productCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64
+        },
+        "productName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 160
+        },
+        "size": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "colour": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "quantity": {
+          "type": "integer"
+        },
+        "unitCostSnapshot": {
+          "type": "number"
+        },
+        "unitPriceSnapshot": {
+          "type": "number"
+        },
+        "totalPrice": {
+          "type": "number"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "New Order",
+            "Stock Checking",
+            "Confirmed",
+            "Processing",
+            "Completed",
+            "On Hold",
+            "Rejected"
+          ],
+          "maxLength": 32
+        },
+        "rejectionReason": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "stockReserved": {
+          "type": "boolean"
+        },
+        "reservedVariantId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "isUnlistedProduct": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "staffId",
+        "staffName",
+        "customerName",
+        "contactNumber",
+        "deliveryAddress",
+        "productCode",
+        "productName",
+        "size",
+        "colour",
+        "quantity",
+        "unitCostSnapshot",
+        "unitPriceSnapshot",
+        "totalPrice",
+        "note",
+        "status",
+        "stockReserved",
+        "isUnlistedProduct",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ReadyTextTemplate": {
+      "title": "ReadyTextTemplate",
+      "description": "Reusable client communication template managed by Admin.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "category": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "title", "category", "body", "isActive", "createdAt", "updatedAt"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Operational expense ledger entry managed by Admin.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "amount": {
+          "type": "number"
+        },
+        "expenseDate": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "createdById": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdByName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "category",
+        "amount",
+        "expenseDate",
+        "note",
+        "createdById",
+        "createdByName",
+        "createdAt"
+      ]
+    },
+    "NotificationItem": {
+      "title": "NotificationItem",
+      "description": "In-app notification targeted to Admin or a specific Staff user.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "recipientRole": {
+          "type": "string",
+          "enum": ["admin", "staff", "user"],
+          "maxLength": 16
+        },
+        "recipientUserId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "type": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "referenceId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "recipientRole",
+        "type",
+        "title",
+        "message",
+        "isRead",
+        "createdAt"
+      ]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Immutable operational activity audit log.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "actorId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "actorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "actorRole": {
+          "type": "string",
+          "enum": ["admin", "staff"],
+          "maxLength": 16
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "details": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "actorId", "actorName", "actorRole", "action", "details", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Trusted Main Admin UID records."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Staff and Admin profile records with RBAC approval status."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Product catalog entries (without secret unit cost)."
+    },
+    "/product_costs/{productId}": {
+      "schema": { "$ref": "#/entities/ProductCost" },
+      "description": "Admin-only unit costs per product."
+    },
+    "/stock_variants/{variantId}": {
+      "schema": { "$ref": "#/entities/StockVariant" },
+      "description": "Per (productId, size, colour) inventory state."
+    },
+    "/stock_movements/{movementId}": {
+      "schema": { "$ref": "#/entities/StockMovement" },
+      "description": "Append-only stock movement audit ledger."
+    },
+    "/stock_idempotency/{requestId}": {
+      "schema": { "$ref": "#/entities/StockIdempotency" },
+      "description": "Idempotency locks for duplicate stock submission prevention."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer orders and reservation workflow."
+    },
+    "/ready_texts/{templateId}": {
+      "schema": { "$ref": "#/entities/ReadyTextTemplate" },
+      "description": "Customer message templates."
+    },
+    "/expenses/{expenseId}": {
+      "schema": { "$ref": "#/entities/Expense" },
+      "description": "Admin-only operational expenses."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/NotificationItem" },
+      "description": "Role-targeted and user-targeted notifications."
+    },
+    "/activity_logs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Append-only system activity audit logs."
+    }
+  }
+}
